@@ -90,6 +90,19 @@
   const ORDEM_FASE = ['em_analise', 'aprovado', 'disputado', 'ganho', 'contratado',
     'em_execucao', 'entregue', 'encerrado', 'perdido', 'recusado'];
 
+  // Fases em que a disputa ja foi vencida. 'ganho' e so a primeira delas —
+  // dura ate a assinatura do contrato e por isso costuma ter poucos registros.
+  const FASES_VITORIA = ['ganho', 'contratado', 'em_execucao', 'entregue', 'encerrado'];
+
+  // Em contexto de contagem, "Ganho" sozinho engana: aparece com 1 ou 2 ao lado
+  // de "Perdido 167" e da a impressao de que quase nao se ganha. Onde o rotulo
+  // acompanha um numero, usamos esta variante.
+  const ROTULO_FASE_CONTAGEM = {};
+  Object.keys(ROTULO_FASE).forEach(function (chave) {
+    ROTULO_FASE_CONTAGEM[chave] = ROTULO_FASE[chave];
+  });
+  ROTULO_FASE_CONTAGEM.ganho = 'Ganho (aguardando contrato)';
+
   const ROTULO_PRAZO = {
     impugnacao: 'Impugnação',
     esclarecimento: 'Esclarecimento',
@@ -214,7 +227,9 @@
     relativo: relativo,
     iniciais: iniciais,
     ROTULO_FASE: ROTULO_FASE,
+    ROTULO_FASE_CONTAGEM: ROTULO_FASE_CONTAGEM,
     ORDEM_FASE: ORDEM_FASE,
+    FASES_VITORIA: FASES_VITORIA,
     ROTULO_PRAZO: ROTULO_PRAZO,
     ROTULO_PAPEL: ROTULO_PAPEL,
     Indicador: Indicador,

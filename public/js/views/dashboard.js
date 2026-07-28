@@ -13,19 +13,28 @@
     const fases = UI.ORDEM_FASE.filter(function (f) { return mapa[f]; });
     if (!fases.length) return e(UI.Vazio, { texto: 'Nenhuma participação registrada.' });
 
-    return e('div', null, fases.map(function (fase) {
-      const qtd = mapa[fase];
-      const classe = fase === 'ganho' ? 'ganho' : (fase === 'perdido' || fase === 'recusado' ? 'perdido' : '');
-      return e('div', { className: 'funil-linha', key: fase },
-        e('div', { className: 'funil-topo' },
-          e('span', { className: 'fase' }, UI.ROTULO_FASE[fase] || fase),
-          e('span', { className: 'qtd' }, UI.numero(qtd))
-        ),
-        e('div', { className: 'funil-trilho' },
-          e('div', { className: 'funil-barra ' + classe, style: { width: (qtd / maior * 100) + '%' } })
-        )
-      );
-    }));
+    const vitorias = UI.FASES_VITORIA.reduce(function (s, f) { return s + (mapa[f] || 0); }, 0);
+
+    return e('div', null,
+      vitorias
+        ? e('p', { className: 'legenda', style: { marginTop: 0 } },
+            e('strong', null, UI.numero(vitorias) + ' vitórias'),
+            ' somando Ganho, Contratado, Em execução, Entregue e Encerrado.')
+        : null,
+      fases.map(function (fase) {
+        const qtd = mapa[fase];
+        const classe = UI.FASES_VITORIA.indexOf(fase) !== -1 ? 'ganho'
+          : (fase === 'perdido' || fase === 'recusado' ? 'perdido' : '');
+        return e('div', { className: 'funil-linha', key: fase },
+          e('div', { className: 'funil-topo' },
+            e('span', { className: 'fase' }, UI.ROTULO_FASE_CONTAGEM[fase] || fase),
+            e('span', { className: 'qtd' }, UI.numero(qtd))
+          ),
+          e('div', { className: 'funil-trilho' },
+            e('div', { className: 'funil-barra ' + classe, style: { width: (qtd / maior * 100) + '%' } })
+          )
+        );
+      }));
   }
 
   function Prazos(props) {

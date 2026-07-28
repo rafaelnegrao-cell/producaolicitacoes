@@ -252,7 +252,7 @@
         e('label', null, 'Fase'),
         e('select', { value: fase[0], onChange: function (ev) { fase[1](ev.target.value); } },
           UI.ORDEM_FASE.map(function (f) {
-            return e('option', { key: f, value: f }, UI.ROTULO_FASE[f]);
+            return e('option', { key: f, value: f }, UI.ROTULO_FASE_CONTAGEM[f]);
           }))),
 
       mostraResultado
@@ -308,7 +308,7 @@
         if (!cartoes.length) return null;
         return e('div', { className: 'kanban-coluna', key: fase },
           e('div', { className: 'kanban-titulo' },
-            e('span', null, UI.ROTULO_FASE[fase]),
+            e('span', null, UI.ROTULO_FASE_CONTAGEM[fase]),
             e('span', { className: 'qtd' }, cartoes.length)),
           cartoes.slice(0, 30).map(function (p) {
             return e('div', {
@@ -373,13 +373,23 @@
 
     const chips = [{ id: '', rotulo: 'Todas', qtd: resumo[0] ? total : undefined }]
       .concat(UI.ORDEM_FASE.filter(function (f) { return mapa[f]; }).map(function (f) {
-        return { id: f, rotulo: UI.ROTULO_FASE[f], qtd: mapa[f] };
+        return { id: f, rotulo: UI.ROTULO_FASE_CONTAGEM[f], qtd: mapa[f] };
       }));
+
+    const vitorias = UI.FASES_VITORIA.reduce(function (s, f) { return s + (mapa[f] || 0); }, 0);
 
     return e('div', null,
       erro[0] ? e('div', { className: 'aviso-erro' }, erro[0]) : null,
 
       e(UI.Chips, { itens: chips, ativo: fase[0], aoEscolher: function (id) { fase[1](id); } }),
+
+      resumo[0] && vitorias
+        ? e('p', { className: 'legenda' },
+            e('strong', null, UI.numero(vitorias) + ' vitórias'),
+            ' no total. “Ganho” é fase de passagem — dura só até a assinatura, ' +
+            'então as vitórias consolidadas aparecem em Contratado, Em execução, ' +
+            'Entregue e Encerrado.')
+        : null,
 
       e('div', { style: { display: 'flex', gap: '8px', alignItems: 'center' } },
         e('div', { className: 'busca', style: { flex: 1 } },

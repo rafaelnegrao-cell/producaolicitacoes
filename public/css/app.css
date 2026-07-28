@@ -282,6 +282,13 @@ a { color: var(--verde-profundo); }
 .funil-barra.ganho { background: var(--acento); }
 .funil-barra.perdido { background: var(--sage); }
 
+/* ----------------------------------------------------------------- legenda */
+.legenda {
+  margin: 0 0 12px;
+  font-size: 12.5px; line-height: 1.45; color: var(--texto-suave);
+}
+.legenda strong { color: var(--verde-profundo); font-weight: 600; }
+
 /* ------------------------------------------------------------------- vazio */
 .vazio {
   text-align: center; padding: 34px 18px; color: var(--texto-suave);
