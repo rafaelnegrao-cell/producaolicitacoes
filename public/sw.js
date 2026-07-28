@@ -18,6 +18,7 @@ const ESSENCIAIS = [
   '/js/views/certidoes.js?v=' + VERSAO,
   '/js/views/comissoes.js?v=' + VERSAO,
   '/js/views/pipeline.js?v=' + VERSAO,
+  '/js/views/clientes.js?v=' + VERSAO,
   '/js/views/em-breve.js?v=' + VERSAO,
   '/manifest.json'
 ];

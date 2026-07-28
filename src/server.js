@@ -59,6 +59,7 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/documentos', require('./routes/documentos'));
 app.use('/api/comissoes', require('./routes/comissoes'));
 app.use('/api/pipeline', require('./routes/pipeline'));
+app.use('/api/clientes', require('./routes/clientes'));
 
 app.use('/api', function (req, res) {
   res.status(404).json({ erro: 'Rota nao encontrada.' });
