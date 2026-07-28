@@ -16,6 +16,7 @@ const ESSENCIAIS = [
   '/js/views/login.js?v=' + VERSAO,
   '/js/views/dashboard.js?v=' + VERSAO,
   '/js/views/certidoes.js?v=' + VERSAO,
+  '/js/views/comissoes.js?v=' + VERSAO,
   '/js/views/em-breve.js?v=' + VERSAO,
   '/manifest.json'
 ];
