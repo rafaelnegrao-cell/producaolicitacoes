@@ -23,8 +23,7 @@ router.get('/resumo', async function (req, res, proximo) {
               count(*) FILTER (WHERE situacao = 'vigente')                             AS vigentes,
               count(*) FILTER (WHERE situacao = 'sem_validade')                        AS sem_validade,
               count(*)                                                                 AS total
-         FROM vw_documento_status
-        WHERE cliente_status <> 'inativo'`
+         FROM vw_certidao_alerta`
     );
     return res.json(linha);
   } catch (erro) {
@@ -35,7 +34,7 @@ router.get('/resumo', async function (req, res, proximo) {
 // Lista com filtros: faixa (vencido|a7|a15|a30|risco|vigente|todas), busca, cliente_id.
 router.get('/', async function (req, res, proximo) {
   try {
-    const condicoes = ["cliente_status <> 'inativo'"];
+    const condicoes = ['true'];
     const params = [];
 
     const faixa = req.query.faixa || 'risco';
@@ -59,7 +58,7 @@ router.get('/', async function (req, res, proximo) {
     }
 
     const linhas = await db.todos(
-      `SELECT * FROM vw_documento_status
+      `SELECT * FROM vw_certidao_alerta
         WHERE ` + condicoes.join(' AND ') + `
         ORDER BY CASE situacao WHEN 'vencido' THEN 0 WHEN 'a_vencer' THEN 1
                                WHEN 'sem_validade' THEN 2 ELSE 3 END,

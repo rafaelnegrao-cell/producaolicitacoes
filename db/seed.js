@@ -673,8 +673,8 @@ async function principal() {
     `SELECT (SELECT count(*) FROM cliente)                                      AS clientes,
             (SELECT count(*) FROM participacao)                                 AS participacoes,
             (SELECT count(*) FROM vw_participacao WHERE venceu)                 AS ganhas,
-            (SELECT count(*) FROM vw_documento_status WHERE situacao = 'vencido')  AS certidoes_vencidas,
-            (SELECT count(*) FROM vw_documento_status WHERE situacao = 'a_vencer') AS certidoes_a_vencer,
+            (SELECT count(*) FROM vw_certidao_alerta WHERE situacao = 'vencido')  AS certidoes_vencidas,
+            (SELECT count(*) FROM vw_certidao_alerta WHERE situacao = 'a_vencer') AS certidoes_a_vencer,
             (SELECT COALESCE(sum(valor_aberto),0) FROM vw_comissao
               WHERE status IN ('a_receber','em_cobranca'))                      AS comissao_a_receber`
   );

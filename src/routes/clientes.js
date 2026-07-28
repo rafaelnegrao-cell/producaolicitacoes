@@ -59,8 +59,9 @@ router.get('/', async function (req, res, proximo) {
                GROUP BY cs.cliente_id
          ) s ON s.cliente_id = c.id
          LEFT JOIN (
+              -- mesmo escopo canonico do painel e da tela de certidoes
               SELECT cliente_id, count(*) AS em_risco
-                FROM vw_documento_status
+                FROM vw_certidao_alerta
                WHERE situacao IN ('vencido','a_vencer')
                GROUP BY cliente_id
          ) d ON d.cliente_id = c.id
@@ -102,6 +103,9 @@ router.get('/:id', async function (req, res, proximo) {
       db.todos(
         'SELECT * FROM contato WHERE cliente_id = $1 ORDER BY principal DESC, nome', [id]
       ),
+      // Excecao deliberada ao escopo canonico: na ficha de UM cliente mostramos
+      // os documentos dele mesmo que esteja inativo — aqui nao e contagem
+      // agregada, e sim o retrato daquele cliente.
       db.todos(
         `SELECT tipo_nome, numero, validade, situacao, dias_para_vencer, arquivo_url
            FROM vw_documento_status WHERE cliente_id = $1

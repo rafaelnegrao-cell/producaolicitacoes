@@ -365,6 +365,10 @@ END $$;
 -- =============================================================================
 
 -- Situacao de cada documento (o mais recente por cliente + tipo).
+--
+-- FRONTEIRA DE "VENCIDO": validade < CURRENT_DATE. Uma certidao que vence hoje
+-- ainda vale hoje — sai como 'a_vencer' com dias_para_vencer = 0, nunca como
+-- 'vencido'. Regra definida uma vez aqui; nenhum consumidor recalcula.
 CREATE OR REPLACE VIEW vw_documento_status AS
 WITH ultimo AS (
   SELECT DISTINCT ON (d.cliente_id, d.tipo_documento_id)
@@ -396,6 +400,19 @@ SELECT u.id,
   FROM ultimo u
   JOIN cliente c        ON c.id  = u.cliente_id
   JOIN tipo_documento td ON td.id = u.tipo_documento_id;
+
+-- ESCOPO CANONICO DE ALERTA DE CERTIDAO.
+--
+-- Toda contagem de certidao exibida ao usuario le daqui: painel, tela de
+-- certidoes, badge da lista de clientes e resumo do seed. Antes cada consumidor
+-- montava seu proprio filtro e os numeros divergiam entre telas.
+--
+-- Escopo: documentos de clientes que nao estao inativos, de qualquer tipo —
+-- obrigatorio ou nao. Um alvara sanitario vencido derruba a habilitacao do
+-- mesmo jeito que uma certidao federal; o flag 'obrigatorio' diz apenas se todo
+-- cliente precisa ter aquele tipo, nao se ele importa quando existe.
+CREATE OR REPLACE VIEW vw_certidao_alerta AS
+SELECT * FROM vw_documento_status WHERE cliente_status <> 'inativo';
 
 -- Participacoes com o contexto que a tela de pipeline precisa.
 CREATE OR REPLACE VIEW vw_participacao AS

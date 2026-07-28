@@ -57,14 +57,15 @@ router.get('/resumo', async function (req, res, proximo) {
         intervalo
       ),
 
+      // Escopo vem de vw_certidao_alerta — mesma fonte da tela de certidoes,
+      // para que os numeros batam entre painel e tela. Faixas cumulativas.
       db.um(
-        `SELECT count(*) FILTER (WHERE situacao = 'vencido')                          AS vencidas,
+        `SELECT count(*) FILTER (WHERE situacao = 'vencido')                             AS vencidas,
                 count(*) FILTER (WHERE situacao = 'a_vencer' AND dias_para_vencer <= 7)  AS ate_7,
                 count(*) FILTER (WHERE situacao = 'a_vencer' AND dias_para_vencer <= 15) AS ate_15,
                 count(*) FILTER (WHERE situacao = 'a_vencer' AND dias_para_vencer <= 30) AS ate_30,
-                count(*) FILTER (WHERE situacao = 'vigente')                          AS vigentes
-           FROM vw_documento_status
-          WHERE obrigatorio AND cliente_status <> 'inativo'`
+                count(*) FILTER (WHERE situacao = 'vigente')                             AS vigentes
+           FROM vw_certidao_alerta`
       ),
 
       db.todos(
