@@ -137,6 +137,72 @@
     );
   }
 
+  // Folha modal (sheet no celular, dialogo no desktop). Fecha no veu e no ×.
+  function Modal(props) {
+    React.useEffect(function () {
+      function aoTeclar(ev) {
+        if (ev.key === 'Escape' && props.aoFechar) props.aoFechar();
+      }
+      document.addEventListener('keydown', aoTeclar);
+      document.body.style.overflow = 'hidden';
+      return function () {
+        document.removeEventListener('keydown', aoTeclar);
+        document.body.style.overflow = '';
+      };
+    }, []);
+
+    return e('div', {
+      className: 'veu',
+      onClick: function (ev) {
+        if (ev.target === ev.currentTarget && props.aoFechar) props.aoFechar();
+      }
+    },
+      e('div', { className: 'folha', role: 'dialog', 'aria-modal': true },
+        e('div', { className: 'folha-cabecalho' },
+          e('h2', null, props.titulo),
+          e('button', { className: 'folha-fechar', 'aria-label': 'Fechar', onClick: props.aoFechar }, '×')
+        ),
+        props.children
+      )
+    );
+  }
+
+  // Fileira de chips de filtro: itens = [{id, rotulo, qtd, tom}].
+  function Chips(props) {
+    return e('div', { className: 'chips' }, props.itens.map(function (item) {
+      return e('button', {
+        key: item.id,
+        className: 'chip ' + (item.id === props.ativo ? 'ativo ' : '') + (item.tom || ''),
+        onClick: function () { props.aoEscolher(item.id); }
+      },
+        item.rotulo,
+        item.qtd !== undefined ? e('span', { className: 'badge' }, UI.numero(item.qtd)) : null
+      );
+    }));
+  }
+
+  // Botao flutuante de acao principal da tela.
+  function Fab(props) {
+    return e('button', { className: 'fab', title: props.titulo, onClick: props.aoClicar }, '+');
+  }
+
+  // Carrega /api/meta uma vez por montagem de tela.
+  function useMeta() {
+    const estado = React.useState(null);
+    React.useEffect(function () {
+      let vivo = true;
+      API.get('/api/meta')
+        .then(function (r) { if (vivo) estado[1](r); })
+        .catch(function () { /* selects ficam vazios; a tela ainda funciona */ });
+      return function () { vivo = false; };
+    }, []);
+    return estado[0];
+  }
+
+  function nomeCliente(c) {
+    return (c && (c.nome_fantasia || c.razao_social)) || '—';
+  }
+
   global.UI = {
     e: e,
     moeda: moeda,
@@ -153,6 +219,11 @@
     ROTULO_PAPEL: ROTULO_PAPEL,
     Indicador: Indicador,
     Cartao: Cartao,
-    Vazio: Vazio
+    Vazio: Vazio,
+    Modal: Modal,
+    Chips: Chips,
+    Fab: Fab,
+    useMeta: useMeta,
+    nomeCliente: nomeCliente
   };
 })(window);

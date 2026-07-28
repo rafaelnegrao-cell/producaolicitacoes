@@ -57,12 +57,17 @@
       menuAberto[1](false);
     }, [rotaId]);
 
-    let conteudo;
-    if (rota.id === 'dashboard') {
-      conteudo = e(Telas.Dashboard, null);
-    } else {
-      conteudo = e(Telas.EmBreve, { rota: rota });
-    }
+    const MAPA_TELAS = {
+      dashboard: 'Dashboard',
+      certidoes: 'Certidoes',
+      comissoes: 'Comissoes',
+      pipeline: 'Pipeline',
+      clientes: 'Clientes'
+    };
+    const Tela = Telas[MAPA_TELAS[rota.id]];
+    const conteudo = Tela
+      ? e(Tela, { usuario: usuario, rota: rota })
+      : e(Telas.EmBreve, { rota: rota });
 
     return e('div', { className: 'app' },
       e(Navegacao, { atual: rota.id, papel: usuario.papel }),

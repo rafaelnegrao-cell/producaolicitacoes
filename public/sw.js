@@ -15,6 +15,7 @@ const ESSENCIAIS = [
   '/js/app.js?v=' + VERSAO,
   '/js/views/login.js?v=' + VERSAO,
   '/js/views/dashboard.js?v=' + VERSAO,
+  '/js/views/certidoes.js?v=' + VERSAO,
   '/js/views/em-breve.js?v=' + VERSAO,
   '/manifest.json'
 ];
@@ -40,7 +41,13 @@ self.addEventListener('activate', function (evento) {
   );
 });
 
+// Em desenvolvimento (localhost) o SW nao intercepta nada — iterar no codigo
+// sem esbarrar em cache. Em producao o bust e feito pelo APP_VERSION.
+const DESENVOLVIMENTO = self.location.hostname === 'localhost' ||
+  self.location.hostname === '127.0.0.1';
+
 self.addEventListener('fetch', function (evento) {
+  if (DESENVOLVIMENTO) return;
   const req = evento.request;
   if (req.method !== 'GET') return;
 

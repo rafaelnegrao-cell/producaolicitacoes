@@ -327,6 +327,104 @@ a { color: var(--verde-profundo); }
   border-top: 1px solid var(--linha); background: var(--creme);
 }
 
+/* -------------------------------------------------------------------- chips */
+.chips {
+  display: flex; gap: 8px; overflow-x: auto;
+  padding: 2px 0 8px; margin-bottom: 8px;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: 0 0 auto;
+  padding: 7px 13px; border-radius: 999px;
+  border: 1px solid var(--linha); background: var(--branco);
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  color: var(--texto); cursor: pointer; white-space: nowrap;
+}
+.chip .badge { font-weight: 700; margin-left: 6px; color: var(--texto-suave); }
+.chip.ativo { background: var(--verde-profundo); border-color: var(--verde-profundo); color: var(--creme); }
+.chip.ativo .badge { color: var(--sage); }
+.chip.perigo:not(.ativo) { border-color: #F0C8C4; color: var(--perigo); }
+.chip.perigo:not(.ativo) .badge { color: var(--perigo); }
+.chip.alerta:not(.ativo) { border-color: #EBD5AE; color: var(--alerta); }
+.chip.alerta:not(.ativo) .badge { color: var(--alerta); }
+
+/* -------------------------------------------------------------------- busca */
+.busca { position: relative; margin-bottom: 10px; }
+.busca input {
+  width: 100%; padding: 11px 13px;
+  border: 1px solid var(--linha); border-radius: var(--raio-p);
+  font-family: inherit; font-size: 15px; background: var(--branco);
+}
+.busca input:focus {
+  outline: none; border-color: var(--acento);
+  box-shadow: 0 0 0 3px rgba(107, 175, 61, .16);
+}
+
+/* -------------------------------------------------------------- folha modal */
+.veu {
+  position: fixed; inset: 0; z-index: 60;
+  background: rgba(31, 58, 46, .5);
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.folha {
+  width: 100%; max-width: 600px; max-height: 90vh;
+  overflow-y: auto; background: var(--branco);
+  border-radius: 18px 18px 0 0;
+  padding: 18px 18px calc(24px + env(safe-area-inset-bottom));
+  animation: sobe .18s ease-out;
+}
+@keyframes sobe {
+  from { transform: translateY(24px); opacity: .6; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.folha-cabecalho {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.folha-cabecalho h2 { font-size: 19px; }
+.folha-fechar {
+  border: none; background: var(--creme); color: var(--texto);
+  width: 32px; height: 32px; border-radius: 50%;
+  font-size: 19px; line-height: 1; cursor: pointer;
+}
+
+/* ---------------------------------------------------------------- form grid */
+.form-linha { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-linha .campo { margin-bottom: 16px; }
+.form-acoes { display: flex; gap: 10px; margin-top: 6px; }
+.form-acoes .botao { flex: 1; }
+.grupo-radio { display: flex; gap: 8px; flex-wrap: wrap; }
+.grupo-radio button {
+  flex: 1; padding: 10px 8px;
+  border: 1px solid var(--linha); border-radius: var(--raio-p);
+  background: var(--branco); font-family: inherit; font-size: 13px;
+  font-weight: 500; color: var(--texto); cursor: pointer; white-space: nowrap;
+}
+.grupo-radio button.ativo {
+  background: rgba(107, 175, 61, .14); border-color: var(--acento);
+  color: var(--verde-profundo); font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------- fab */
+.fab {
+  position: fixed; right: 16px;
+  bottom: calc(var(--altura-nav) + 16px + env(safe-area-inset-bottom));
+  z-index: 45;
+  width: 56px; height: 56px; border-radius: 50%;
+  border: none; background: var(--acento); color: #10240F;
+  font-size: 28px; line-height: 1; font-weight: 400;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(31, 58, 46, .35);
+}
+.fab:active { transform: scale(.96); }
+
+/* -------------------------------------------------------------- detalhe par */
+.par { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--linha); }
+.par:last-child { border-bottom: none; }
+.par .k { font-size: 12.5px; color: var(--texto-suave); }
+.par .v { font-size: 13.5px; font-weight: 600; text-align: right; }
+
 /* ------------------------------------------------------------------ desktop */
 @media (min-width: 900px) {
   .app { padding-bottom: 0; padding-left: var(--largura-lateral); }
@@ -368,4 +466,8 @@ a { color: var(--verde-profundo); }
   .conteudo { padding: 22px 24px 40px; }
   .grade { grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .grade.duas { grid-template-columns: repeat(2, 1fr); }
+
+  .veu { align-items: center; }
+  .folha { border-radius: 18px; padding-bottom: 24px; }
+  .fab { right: 28px; bottom: 28px; }
 }
